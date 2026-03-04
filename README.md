@@ -1,22 +1,22 @@
 
-# X-Repo  
+# Quantalab  
 ## Quantum Debugger & Research Sandbox
 
 <p align="center">
-  <a href="https://x-repo.io">
+  <a href="https://Quantalab.io">
     <img src="https://img.shields.io/badge/Version-1.0.0-blue" alt="Version">
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
   </a>
-  <a href="https://github.com/x-repo/x-repo/stargazers">
-    <img src="https://img.shields.io/github/stars/x-repo/x-repo" alt="Stars">
+  <a href="https://github.com/Quantalab/Quantalab/stargazers">
+    <img src="https://img.shields.io/github/stars/Quantalab/Quantalab" alt="Stars">
   </a>
 </p>
 
-**X-Repo** is a professional-grade quantum computing platform engineered for deterministic debugging, reproducible experimentation, and research-grade output generation. It provides intelligent tooling for quantum circuit analysis, structured noise simulation, scalability assessment, and experiment lifecycle management.
+**Quantalab** is a professional-grade quantum computing platform engineered for deterministic debugging, reproducible experimentation, and research-grade output generation. It provides intelligent tooling for quantum circuit analysis, structured noise simulation, scalability assessment, and experiment lifecycle management.
 
-Designed for researchers, quantum engineers, and advanced students, X-Repo bridges development, experimentation, and analytical validation in a single integrated environment.
+Designed for researchers, quantum engineers, and advanced students, Quantalab bridges development, experimentation, and analytical validation in a single integrated environment.
 
 ---
 
@@ -40,7 +40,7 @@ Designed for researchers, quantum engineers, and advanced students, X-Repo bridg
 
 ## Overview
 
-X-Repo enables:
+Quantalab enables:
 
 - Deterministic quantum circuit debugging
 - Noise sensitivity modeling and fidelity analysis
@@ -195,8 +195,8 @@ Data Layer (Supabase PostgreSQL + Firebase Auth + Storage)
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/x-repo/x-repo.git
-cd x-repo
+git clone https://github.com/Quantalab/Quantalab.git
+cd Quantalab
 ````
 
 ---
@@ -261,7 +261,7 @@ FIREBASE_ADMIN_CREDENTIALS=path_to_firebase_credentials
 ## Project Structure
 
 ```
-x-repo/
+Quantalab/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
