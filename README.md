@@ -16,7 +16,7 @@
 
 **Quantalab** is a professional-grade quantum computing platform engineered for deterministic debugging, reproducible experimentation, and research-grade output generation. It provides intelligent tooling for quantum circuit analysis, structured noise simulation, scalability assessment, and experiment lifecycle management.
 
-Designed for researchers, quantum engineers, and advanced students, Quantalab bridges development, experimentation, and analytical validation in a single integrated environment.
+Designed for researchers, quantum engineers, and advanced students, Quantalab bridges development, experimentation, and analytical validation in a single integrated environment. The platform features a highly-optimized **Scientific Dark Lab** interface designed for data-dense workflows.
 
 ---
 
@@ -91,7 +91,8 @@ A reproducible research environment for controlled experimentation.
 
 - Versioned experiment snapshots
 - Deterministic seed-controlled runs
-- Multi-backend benchmarking
+- Multi-backend benchmarking with Recharts comparative histograms
+- In-situ Noise Simulation Analysis panel
 - Structured export (QASM, Qiskit objects, metrics reports)
 
 ---
