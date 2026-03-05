@@ -1,9 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Base surfaces */
+  --bg-void: #050810;
+  --bg-base: #0a0f1e;
+  --bg-raised: #0f1629;
+  --bg-overlay: #161d35;
+  --bg-subtle: #1c2540;
+
+  /* Borders */
+  --border-dim: #1e2a45;
+  --border-default: #253354;
+  --border-bright: #2e4070;
+
+  /* Quantum accent palette */
+  --accent-cyan: #00e5ff;
+  --accent-violet: #7c3aed;
+  --accent-amber: #f59e0b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+
+  /* Text */
+  --text-primary: #e2e8f7;
+  --text-secondary: #8896b3;
+  --text-muted: #4a5a7a;
+  --text-code: #a8d8ea;
+
+  /* Data visualization */
+  --data-1: #00e5ff;
+  --data-2: #7c3aed;
+  --data-3: #f59e0b;
+  --data-4: #10b981;
+  --data-5: #f43f5e;
+  --data-6: #38bdf8;
+}
+
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900;
+    @apply bg-base text-text-primary font-body text-[13px] leading-relaxed selection:bg-[#00e5ff]/30;
+    /* Force dark background logic globally since rule is dark-first */
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-body font-medium tracking-wide;
+  }
+
+  /* Quantum-style scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-void);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-default);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-bright);
+  }
+}
+
+@layer components {
+
+  /* Dashboard grid — 12-column, tight gutters */
+  .dashboard-grid {
+    @apply grid grid-cols-1 md:grid-cols-12 gap-px bg-border-dim;
+  }
+
+  .panel {
+    @apply bg-raised p-5 md:p-6;
+  }
+
+  /* Metric Card Animations */
+  .metric-card {
+    animation: slideInUp 0.3s ease forwards;
+    opacity: 0;
+  }
+
+  .metric-card:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .metric-card:nth-child(2) {
+    animation-delay: 0.10s;
+  }
+
+  .metric-card:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+
+  .metric-card:nth-child(4) {
+    animation-delay: 0.20s;
+  }
+
+  /* Risk badges */
+  .badge-low {
+    @apply bg-[#0d2e1f] text-accent-emerald border border-[#1a4d32] px-2 py-0.5 rounded text-xs tracking-wider;
+  }
+
+  .badge-medium {
+    @apply bg-[#2d1f05] text-accent-amber border border-[#4a3308] px-2 py-0.5 rounded text-xs tracking-wider;
+  }
+
+  .badge-high {
+    @apply bg-[#2d0a12] text-accent-rose border border-[#4a1220] px-2 py-0.5 rounded text-xs tracking-wider;
+  }
+}
+
+@layer utilities {
+  .metric-value {
+    transition: color 0.4s ease;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drawArc {
+  to {
+    stroke-dashoffset: var(--offset);
   }
 }

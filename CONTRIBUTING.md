@@ -1,6 +1,6 @@
-# Contributing to X-Repo
+# Contributing to QuantaLab
 
-First off, thank you for considering contributing to X-Repo! We welcome all contributions to help democratize quantum computing education and collaboration.
+First off, thank you for considering contributing to QuantaLab! We welcome all contributions to help democratize quantum computing education and collaboration.
 
 ## Table of Contents
 - [Code of Conduct](#code-of-conduct)
@@ -17,8 +17,8 @@ This project is intended to be a safe, welcoming space for collaboration, and co
 1.  **Fork the repository** on GitHub.
 2.  **Clone your fork** locally:
     ```bash
-    git clone https://github.com/your-username/x-repo.git
-    cd x-repo
+    git clone https://github.com/NihaalNO/QuantaLab.git
+    cd QuantaLab
     ```
 3.  **Set up the environment** following the instructions in the [README.md](./README.md) for both Frontend and Backend.
     - Ensure you have the necessary API keys (Firebase, Supabase, Google Gemini).

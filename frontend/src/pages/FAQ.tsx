@@ -1,16 +1,16 @@
 export default function FAQ() {
   const faqs = [
     {
-      question: "What is X-Repo?",
-      answer: "X-Repo is a project repository platform that combines project management, collaboration, and community features for developers. Think of it as a place to share and discover projects."
+      question: "What is QuantaLab?",
+      answer: "QuantaLab is a project repository platform that combines project management, collaboration, and community features for developers. Think of it as a place to share and discover projects."
     },
     {
       question: "How do I get started?",
       answer: "Simply create an account using email, Google, or GitHub. Then explore projects, create your own, or join a community to start learning and sharing!"
     },
     {
-      question: "Do I need to have programming experience to use X-Repo?",
-      answer: "Not at all! X-Repo is designed for all skill levels. Beginners can learn from tutorials and examples, while experts can share advanced projects and contribute to the community."
+      question: "Do I need to have programming experience to use QuantaLab?",
+      answer: "Not at all! QuantaLab is designed for all skill levels. Beginners can learn from tutorials and examples, while experts can share advanced projects and contribute to the community."
     },
     {
       question: "What file formats are supported for projects?",
@@ -21,12 +21,12 @@ export default function FAQ() {
       answer: "Our AI assistant uses Google's Gemini API to provide coding assistance, debugging help, optimization suggestions, and educational guidance."
     },
     {
-      question: "Is X-Repo free to use?",
-      answer: "Yes! X-Repo is completely free and open source. However, AI features may have usage limits to ensure fair access for all users."
+      question: "Is QuantaLab free to use?",
+      answer: "Yes! QuantaLab is completely free and open source. However, AI features may have usage limits to ensure fair access for all users."
     },
     {
-      question: "Can I use X-Repo for commercial projects?",
-      answer: "Yes, you can use X-Repo for both personal and commercial projects. However, please review the license terms and ensure your usage complies with the MIT License."
+      question: "Can I use QuantaLab for commercial projects?",
+      answer: "Yes, you can use QuantaLab for both personal and commercial projects. However, please review the license terms and ensure your usage complies with the MIT License."
     },
     {
       question: "How do I report bugs or request features?",
@@ -37,8 +37,8 @@ export default function FAQ() {
       answer: "Yes, we use industry-standard security practices including Firebase Authentication, encrypted connections (HTTPS), and secure database storage. Private projects are only visible to you."
     },
     {
-      question: "Can I contribute to X-Repo?",
-      answer: "Absolutely! X-Repo is open source and we welcome contributions. Check out our GitHub repository for contribution guidelines and code of conduct."
+      question: "Can I contribute to QuantaLab?",
+      answer: "Absolutely! QuantaLab is open source and we welcome contributions. Check out our GitHub repository for contribution guidelines and code of conduct."
     }
   ]
 

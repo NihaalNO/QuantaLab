@@ -1,119 +1,129 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import NotificationDropdown from './NotificationDropdown'
+import { type ReactNode } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 
 interface LayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const { currentUser, userProfile, logout } = useAuth()
-  const navigate = useNavigate()
+  const location = useLocation()
 
-  const handleLogout = async () => {
-    await logout()
-    navigate('/')
-  }
+  const navigation = [
+    { name: 'Dashboard', href: '/', icon: '📊' },
+    { name: 'Quantum Debugger', href: '/debugger', icon: '🔍' },
+    { name: 'Research Sandbox', href: '/experiments', icon: '🧪' },
+  ]
+
+  const secondaryNavigation = [
+    { name: 'Documentation', href: '/about', icon: '📖' },
+    { name: 'FAQ', href: '/faq', icon: '❓' },
+    { name: 'Support', href: '/contact', icon: '💬' },
+  ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link to="/" className="flex items-center">
-                <span className="text-2xl font-bold text-primary-600">X-Repo</span>
-              </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link
-                  to="/debugger"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-primary-600"
-                >
-                  Debugger
-                </Link>
-                <Link
-                  to="/experiments"
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-primary-600"
-                >
-                  Experiments
-                </Link>
+    <div className="min-h-screen bg-void font-body text-text-primary flex relative">
+      {/* Sidebar Navigation */}
+      <div className="w-[240px] flex-shrink-0 bg-base border-r border-border-dim hidden md:flex flex-col h-screen sticky top-0 z-20">
+        <div className="p-6">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-raised rounded border border-border-default flex items-center justify-center text-accent-cyan">
+              ⌬
+            </div>
+            <span className="font-semibold text-lg tracking-wide uppercase text-white">QuantaLab</span>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-8">
+          {/* Main Navigation */}
+          <div>
+            <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest pl-2 mb-3">Core Tools</div>
+            <nav className="space-y-1">
+              {navigation.map((item) => {
+                const isActive = location.pathname === item.href ||
+                  (item.href !== '/' && location.pathname.startsWith(item.href))
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${isActive
+                        ? 'bg-raised text-accent-cyan border-l-[3px] border-accent-cyan -ml-[3px]'
+                        : 'text-text-secondary hover:bg-subtle hover:text-text-primary'
+                      }`}
+                  >
+                    <span>{item.icon}</span>
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </nav>
+          </div>
+
+          {/* Secondary Navigation */}
+          <div>
+            <div className="text-[10px] font-bold text-text-muted uppercase tracking-widest pl-2 mb-3">Resources</div>
+            <nav className="space-y-1">
+              {secondaryNavigation.map((item) => {
+                const isActive = location.pathname === item.href
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${isActive
+                        ? 'bg-raised text-accent-cyan border-l-[3px] border-accent-cyan -ml-[3px]'
+                        : 'text-text-secondary hover:bg-subtle hover:text-text-primary'
+                      }`}
+                  >
+                    <span>{item.icon}</span>
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </nav>
+          </div>
+        </div>
+
+        <div className="p-4 border-t border-border-dim">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="w-8 h-8 rounded-full bg-raised border border-border-default flex items-center justify-center text-xs font-mono text-accent-cyan">
+              ME
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium text-text-primary truncate">Researcher User</div>
+              <div className="text-xs text-text-muted flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-emerald"></span> Online
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              {currentUser ? (
-                <>
-                  <NotificationDropdown />
-                  <Link
-                    to={`/profile/${userProfile?.username || currentUser.uid}`}
-                    className="text-sm text-gray-700 hover:text-primary-600"
-                  >
-                    {userProfile?.display_name || userProfile?.username || 'Profile'}
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="text-sm text-gray-700 hover:text-primary-600"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="text-sm text-gray-700 hover:text-primary-600"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
           </div>
         </div>
-      </nav>
-      <main>{children}</main>
-      <footer className="bg-white border-t mt-12">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">X-Repo</h3>
-              <p className="text-sm text-gray-600">
-                Project repository platform for developers to manage, collaborate, and share.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Features</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="/debugger" className="hover:text-primary-600">Debugger</Link></li>
-                <li><Link to="/experiments" className="hover:text-primary-600">Experiments</Link></li>
-                <li><Link to="/about" className="hover:text-primary-600">About</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Resources</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link to="/faq" className="hover:text-primary-600">FAQ</Link></li>
-                <li><Link to="/contact" className="hover:text-primary-600">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-primary-600">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-primary-600">Terms of Service</a></li>
-              </ul>
-            </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 bg-base">
+        {/* Top Header */}
+        <header className="h-[60px] bg-base border-b border-border-dim flex items-center px-6 sticky top-0 z-10 hidden md:flex justify-between">
+          <div className="text-sm font-mono text-text-secondary tracking-wide">
+            workspace / <span className="text-text-primary">default-project</span> / <span className="text-accent-cyan">{location.pathname}</span>
           </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-gray-600">
-            <p>&copy; 2025 X-Repo. Open source under MIT License.</p>
+          <div className="flex items-center gap-4">
+            <div className="text-[11px] font-mono text-text-muted tracking-widest">v1.2.0-beta</div>
           </div>
-        </div>
-      </footer>
+        </header>
+
+        {/* Mobile Header (Simplified) */}
+        <header className="md:hidden bg-base border-b border-border-dim p-4 flex items-center justify-between sticky top-0 z-20">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-raised rounded border border-border-default flex items-center justify-center text-accent-cyan text-xs">
+              ⌬
+            </div>
+            <span className="font-semibold tracking-wide uppercase text-white">QuantaLab</span>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-x-hidden">
+          {children}
+        </main>
+      </div>
     </div>
   )
 }

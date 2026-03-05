@@ -1,10 +1,10 @@
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-6">About X-Repo</h1>
+      <h1 className="text-4xl font-bold mb-6">About QuantaLab</h1>
       <div className="prose prose-lg max-w-none">
         <p className="text-lg text-gray-700 mb-6">
-          X-Repo is a quantum tooling platform focused on deterministic debugging and reproducible quantum experimentation. We provide intelligent tools that explain circuit failure, quantify noise sensitivity, and enable research-grade experiment management.
+          QuantaLab is a quantum tooling platform focused on deterministic debugging and reproducible quantum experimentation. We provide intelligent tools that explain circuit failure, quantify noise sensitivity, and enable research-grade experiment management.
         </p>
 
         <h2 className="text-2xl font-bold mt-8 mb-4">Our Mission</h2>
@@ -44,10 +44,10 @@ export default function About() {
 
         <h2 className="text-2xl font-bold mt-8 mb-4">Open Source</h2>
         <p className="text-gray-700 mb-4">
-          X-Repo is open source and available under the MIT License. We welcome contributions from the quantum computing community!
+          QuantaLab is open source and available under the MIT License. We welcome contributions from the quantum computing community!
         </p>
         <p className="text-gray-700">
-          Whether you're a quantum researcher, algorithm developer, or student learning quantum computing, X-Repo provides the tools you need for rigorous experimentation and analysis.
+          Whether you're a quantum researcher, algorithm developer, or student learning quantum computing, QuantaLab provides the tools you need for rigorous experimentation and analysis.
         </p>
       </div>
     </div>

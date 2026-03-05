@@ -3,7 +3,11 @@
     "allow": [
       "Bash(source:*)",
       "Bash(ls -la \"C:/Users/odath/OneDrive/Desktop/x-repo/\"*.md 2>/dev/null || echo \"No markdown files in root\")",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(ls:*)",
+      "Bash(npm run:*)",
+      "Bash(netstat:*)",
+      "Bash(curl:*)"
     ]
   }
 }
