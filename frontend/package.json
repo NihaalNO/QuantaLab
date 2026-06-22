@@ -23,7 +23,6 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "autoprefixer": "^10.4.23",
     "axios": "^1.13.2",
-    "firebase": "^12.7.0",
     "monaco-editor": "^0.55.1",
     "postcss": "^8.5.6",
     "react": "^19.2.3",

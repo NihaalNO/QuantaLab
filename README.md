@@ -117,7 +117,7 @@ Frontend (React + TypeScript + Vite)
 Backend (FastAPI + Qiskit)
 │
 ▼
-Data Layer (Supabase PostgreSQL + Firebase Auth + Storage)
+Data Layer (Supabase PostgreSQL + Supabase Auth + Storage)
 
 ````
 
@@ -135,7 +135,7 @@ Data Layer (Supabase PostgreSQL + Firebase Auth + Storage)
 
 ### Data Layer
 - PostgreSQL (via Supabase)
-- Authentication (Firebase)
+- Authentication (Supabase)
 - Object storage buckets
 - Realtime event streaming
 
@@ -174,8 +174,7 @@ Data Layer (Supabase PostgreSQL + Firebase Auth + Storage)
 
 | Service | Role |
 |----------|------|
-| Supabase | Database, storage, realtime |
-| Firebase | Authentication |
+| Supabase | Database, auth, storage, realtime |
 | Google Cloud | AI/ML services |
 
 ---
@@ -188,7 +187,7 @@ Data Layer (Supabase PostgreSQL + Firebase Auth + Storage)
 - npm
 - Python 3.9+
 - Supabase project
-- Firebase project
+- Google Gemini API key
 - (Optional) Google Gemini API key
 
 ---
@@ -243,18 +242,16 @@ http://localhost:8000
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
 ### Backend `.env`
 
 ```env
 SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_service_key
+SUPABASE_SERVICE_KEY=your_supabase_service_key
 GEMINI_API_KEY=your_gemini_api_key
-FIREBASE_ADMIN_CREDENTIALS=path_to_firebase_credentials
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
 
 ---
@@ -300,7 +297,7 @@ Quantalab/
 | ------ | ------------------------ | --------------------- |
 | POST   | `/api/auth/register`     | Create user profile   |
 | GET    | `/api/auth/me`           | Retrieve current user |
-| POST   | `/api/auth/verify-token` | Verify Firebase token |
+| POST   | `/api/auth/session`      | Validate Supabase session |
 
 ---
 
@@ -414,7 +411,7 @@ See the `LICENSE` file for full details.
 
 * Qiskit — Quantum computing framework
 * Supabase — Backend infrastructure
-* Firebase — Authentication services
+* Supabase — Authentication services
 
 ---
 

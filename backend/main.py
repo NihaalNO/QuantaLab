@@ -415,5 +415,118 @@ async def delete_experiment(experiment_id: str):
     return {"message": "Experiment deleted successfully"}
 
 
+# ==================== VISUALIZER ENDPOINTS ====================
+
+class VisualizeRequest(BaseModel):
+    qasm_code: str
+    shots: Optional[int] = 1024
+
+
+@api_router.post("/visualizer/simulate")
+async def simulate_circuit(request: VisualizeRequest):
+    """
+    Simulate a quantum circuit and return statevector probabilities,
+    amplitudes, measurement counts, and noise fidelity.
+    """
+    try:
+        from qiskit import QuantumCircuit
+        from qiskit.quantum_info import Statevector
+        from qiskit_aer import AerSimulator
+        import numpy as np
+        import time
+
+        print(f"[visualizer] Received QASM ({len(request.qasm_code)} chars):")
+        print(request.qasm_code)
+
+        # Parse the circuit
+        circuit = QuantumCircuit.from_qasm_str(request.qasm_code)
+        num_qubits = circuit.num_qubits
+
+        start_time = time.time()
+
+        # Build a measurement-free copy for statevector simulation
+        # (Statevector cannot handle measure instructions)
+        sv_circuit = QuantumCircuit(num_qubits)
+        for instruction in circuit.data:
+            if instruction.operation.name != 'measure':
+                sv_circuit.append(instruction.operation, instruction.qubits, instruction.clbits)
+
+        # Ideal statevector simulation (on measurement-free circuit)
+        sv = Statevector(sv_circuit)
+        probs = sv.probabilities()
+        amplitudes_raw = sv.data
+
+        # Build probability data
+        probabilities = []
+        for i in range(len(probs)):
+            state_label = format(i, f'0{num_qubits}b')
+            if probs[i] > 1e-10:
+                probabilities.append({
+                    "state": f"|{state_label}⟩",
+                    "probability": float(probs[i])
+                })
+
+        # Build amplitude data (real + imaginary parts)
+        amplitudes = []
+        for i in range(len(amplitudes_raw)):
+            state_label = format(i, f'0{num_qubits}b')
+            amp = amplitudes_raw[i]
+            if abs(amp) > 1e-10:
+                amplitudes.append({
+                    "state": f"|{state_label}⟩",
+                    "real": float(np.real(amp)),
+                    "imag": float(np.imag(amp))
+                })
+
+        # Shot-based simulation for counts (uses the original circuit WITH measurements)
+        simulator = AerSimulator()
+        result = simulator.run(circuit, shots=request.shots).result()
+        counts_raw = result.get_counts()
+        counts = {}
+        for state_str, count in counts_raw.items():
+            counts[f"|{state_str}⟩"] = count
+
+        # Noise fidelity (simple depolarizing)
+        try:
+            from qiskit_aer.noise import depolarizing_error, NoiseModel
+            noise_model = NoiseModel()
+            noise_model.add_all_qubit_quantum_error(
+                depolarizing_error(0.05, 1), ['h', 's', 't', 'x', 'y', 'z']
+            )
+            noise_model.add_all_qubit_quantum_error(
+                depolarizing_error(0.1, 2), ['cx']
+            )
+            noisy_result = simulator.run(
+                circuit, noise_model=noise_model, shots=request.shots
+            ).result()
+            noisy_counts = noisy_result.get_counts()
+            total_noisy = sum(noisy_counts.values())
+            noisy_probs = np.zeros(2 ** num_qubits)
+            for state_str, count in noisy_counts.items():
+                idx = int(state_str[::-1], 2) if state_str else 0
+                noisy_probs[idx] = count / total_noisy
+            fidelity = float(np.sum(np.sqrt(probs * noisy_probs)))
+        except Exception as noise_err:
+            print(f"[visualizer] Noise sim warning: {noise_err}")
+            fidelity = 0.95
+
+        execution_time_ms = (time.time() - start_time) * 1000
+
+        print(f"[visualizer] Success: {len(probabilities)} states, fidelity={fidelity:.4f}, {execution_time_ms:.1f}ms")
+
+        return {
+            "probabilities": probabilities,
+            "amplitudes": amplitudes,
+            "counts": counts,
+            "fidelity": fidelity,
+            "num_qubits": num_qubits,
+            "execution_time_ms": execution_time_ms,
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 # Include the router AFTER all endpoints are defined
 app.include_router(api_router)

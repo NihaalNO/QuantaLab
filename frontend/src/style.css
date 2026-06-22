@@ -1,50 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Base surfaces */
-  --bg-void: #050810;
-  --bg-base: #0a0f1e;
-  --bg-raised: #0f1629;
-  --bg-overlay: #161d35;
-  --bg-subtle: #1c2540;
+  --bg-void: #080808;
+  --bg-base: #101010;
+  --bg-raised: #151515;
+  --bg-overlay: #1a1a1a;
+  --bg-subtle: #202020;
 
-  /* Borders */
-  --border-dim: #1e2a45;
-  --border-default: #253354;
-  --border-bright: #2e4070;
+  --border-dim: #282625;
+  --border-default: #3d3a39;
+  --border-bright: #5b5754;
 
-  /* Quantum accent palette */
-  --accent-cyan: #00e5ff;
-  --accent-violet: #7c3aed;
-  --accent-amber: #f59e0b;
+  --accent-green: #00d992;
+  --accent-cyan: #38e8ff;
+  --accent-blue: #4f8cff;
+  --accent-violet: #9b5cff;
+  --accent-amber: #f5b64b;
   --accent-emerald: #10b981;
-  --accent-rose: #f43f5e;
+  --accent-rose: #f25f7a;
 
-  /* Text */
-  --text-primary: #e2e8f7;
-  --text-secondary: #8896b3;
-  --text-muted: #4a5a7a;
-  --text-code: #a8d8ea;
+  --text-primary: #f2f2f2;
+  --text-secondary: #bdbdbd;
+  --text-muted: #8b949e;
+  --text-code: #f5f6f7;
 
-  /* Data visualization */
-  --data-1: #00e5ff;
-  --data-2: #7c3aed;
-  --data-3: #f59e0b;
-  --data-4: #10b981;
-  --data-5: #f43f5e;
-  --data-6: #38bdf8;
+  --data-1: #00d992;
+  --data-2: #38e8ff;
+  --data-3: #9b5cff;
+  --data-4: #4f8cff;
+  --data-5: #f5b64b;
+  --data-6: #f25f7a;
 }
 
 @layer base {
+  * {
+    @apply border-border-dim;
+  }
+
+  html {
+    background: var(--bg-base);
+  }
+
   body {
-    @apply bg-base text-text-primary font-body text-[13px] leading-relaxed selection:bg-[#00e5ff]/30;
-    /* Force dark background logic globally since rule is dark-first */
-    background-color: var(--bg-base);
-    color: var(--text-primary);
+    @apply bg-base text-text-primary font-body text-[14px] leading-relaxed antialiased;
+    color-scheme: dark;
+    font-feature-settings: "calt", "rlig";
+  }
+
+  ::selection {
+    background: rgba(0, 217, 146, 0.25);
+    color: #ffffff;
   }
 
   h1,
@@ -53,22 +62,44 @@
   h4,
   h5,
   h6 {
-    @apply font-body font-medium tracking-wide;
+    @apply font-body tracking-normal text-text-primary;
   }
 
-  /* Quantum-style scrollbar */
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    outline: none;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid rgba(0, 217, 146, 0.6);
+    outline-offset: 2px;
+  }
+
+  button,
+  a {
+    @apply cursor-pointer;
+  }
+
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg-void);
+    background: var(--bg-base);
   }
 
   ::-webkit-scrollbar-thumb {
     background: var(--border-default);
     border-radius: 9999px;
+    border: 2px solid var(--bg-base);
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -77,49 +108,134 @@
 }
 
 @layer components {
+  .ql-page {
+    @apply min-h-screen bg-base text-text-primary;
+    background-image:
+      radial-gradient(circle at 18% 12%, rgba(0, 217, 146, 0.08), transparent 28rem),
+      radial-gradient(circle at 82% 10%, rgba(56, 232, 255, 0.08), transparent 24rem),
+      linear-gradient(rgba(61, 58, 57, 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61, 58, 57, 0.18) 1px, transparent 1px);
+    background-size: auto, auto, 64px 64px, 64px 64px;
+  }
 
-  /* Dashboard grid — 12-column, tight gutters */
+  .ql-container {
+    @apply mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8;
+  }
+
+  .ql-section {
+    @apply border-t border-dashed border-border-default py-12 md:py-16;
+  }
+
+  .ql-eyebrow {
+    @apply text-[12px] font-semibold uppercase tracking-[0.22em] text-accent-green;
+  }
+
+  .ql-title {
+    @apply text-3xl font-normal leading-tight tracking-[-0.03em] text-white md:text-5xl;
+  }
+
+  .ql-subtitle {
+    @apply max-w-3xl text-base leading-7 text-text-secondary md:text-lg;
+  }
+
+  .ql-card {
+    @apply rounded-md border border-border-default bg-base p-5 text-text-primary transition duration-200 ease-out;
+  }
+
+  .ql-card:hover {
+    @apply border-border-bright;
+    box-shadow: 0 0 15px rgba(92, 88, 85, 0.2);
+  }
+
+  .ql-card-soft {
+    @apply rounded-md border border-border-default bg-raised p-5;
+  }
+
+  .ql-button-primary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-accent-green px-5 py-2.5 text-sm font-semibold text-[#101010] transition duration-200 hover:bg-[#2fd6a1] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .ql-button-secondary {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border-default bg-base px-5 py-2.5 text-sm font-semibold text-text-primary transition duration-200 hover:border-border-bright hover:bg-raised disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .ql-button-ghost {
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-semibold text-accent-green transition duration-200;
+  }
+
+  .ql-button-ghost:hover {
+    background: rgba(0, 217, 146, 0.1);
+  }
+
+  .ql-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-border-default bg-base px-3 py-1 text-xs text-text-secondary;
+  }
+
+  .ql-code-chip {
+    @apply inline-flex items-center rounded-md bg-raised px-2 py-1 font-mono text-[12px] text-text-code;
+  }
+
+  .ql-input {
+    @apply w-full rounded-md border border-border-default bg-raised px-4 py-3 text-sm text-text-primary placeholder:text-text-muted transition focus:border-accent-green;
+  }
+
+  .ql-panel-title {
+    @apply text-[12px] font-semibold uppercase tracking-[0.18em] text-text-muted;
+  }
+
   .dashboard-grid {
-    @apply grid grid-cols-1 md:grid-cols-12 gap-px bg-border-dim;
+    @apply grid grid-cols-1 gap-px bg-border-dim;
+  }
+
+  @screen md {
+    .dashboard-grid {
+      @apply grid-cols-12;
+    }
   }
 
   .panel {
-    @apply bg-raised p-5 md:p-6;
+    @apply bg-base p-5 md:p-6;
   }
 
-  /* Metric Card Animations */
-  .metric-card {
-    animation: slideInUp 0.3s ease forwards;
-    opacity: 0;
-  }
-
-  .metric-card:nth-child(1) {
-    animation-delay: 0.05s;
-  }
-
-  .metric-card:nth-child(2) {
-    animation-delay: 0.10s;
-  }
-
-  .metric-card:nth-child(3) {
-    animation-delay: 0.15s;
-  }
-
-  .metric-card:nth-child(4) {
-    animation-delay: 0.20s;
-  }
-
-  /* Risk badges */
   .badge-low {
-    @apply bg-[#0d2e1f] text-accent-emerald border border-[#1a4d32] px-2 py-0.5 rounded text-xs tracking-wider;
+    @apply rounded-full border px-2.5 py-1 text-xs tracking-wider text-accent-emerald;
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
   }
 
   .badge-medium {
-    @apply bg-[#2d1f05] text-accent-amber border border-[#4a3308] px-2 py-0.5 rounded text-xs tracking-wider;
+    @apply rounded-full border px-2.5 py-1 text-xs tracking-wider text-accent-amber;
+    background: rgba(245, 182, 75, 0.1);
+    border-color: rgba(245, 182, 75, 0.3);
   }
 
   .badge-high {
-    @apply bg-[#2d0a12] text-accent-rose border border-[#4a1220] px-2 py-0.5 rounded text-xs tracking-wider;
+    @apply rounded-full border px-2.5 py-1 text-xs tracking-wider text-accent-rose;
+    background: rgba(242, 95, 122, 0.1);
+    border-color: rgba(242, 95, 122, 0.3);
+  }
+
+  .metric-card {
+    animation: slideInUp 0.35s ease forwards;
+    opacity: 0;
+  }
+
+  .metric-card:nth-child(1) { animation-delay: 0.04s; }
+  .metric-card:nth-child(2) { animation-delay: 0.08s; }
+  .metric-card:nth-child(3) { animation-delay: 0.12s; }
+  .metric-card:nth-child(4) { animation-delay: 0.16s; }
+
+  .simulate-pulse {
+    animation: simulatePulse 1.5s ease-in-out infinite;
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.28s ease both;
+  }
+
+  .custom-scrollbar {
+    scrollbar-color: var(--border-default) var(--bg-base);
+    scrollbar-width: thin;
   }
 }
 
@@ -127,22 +243,60 @@
   .metric-value {
     transition: color 0.4s ease;
   }
+
+  .quantum-orbit {
+    animation: orbit 14s linear infinite;
+    transform-origin: center;
+  }
+
+  .quantum-orbit-slow {
+    animation: orbit 22s linear infinite reverse;
+    transform-origin: center;
+  }
 }
 
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes drawArc {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
   to {
-    stroke-dashoffset: var(--offset);
+    opacity: 1;
+  }
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes simulatePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 217, 146, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 18px 4px rgba(0, 217, 146, 0.24);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

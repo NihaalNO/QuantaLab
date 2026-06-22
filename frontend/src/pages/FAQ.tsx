@@ -1,57 +1,48 @@
 export default function FAQ() {
   const faqs = [
     {
-      question: "What is QuantaLab?",
-      answer: "QuantaLab is a project repository platform that combines project management, collaboration, and community features for developers. Think of it as a place to share and discover projects."
+      question: 'What is QuantaLab?',
+      answer: 'QuantaLab is a quantum research workspace for circuit debugging, simulation, experiment management, and backend benchmarking.',
     },
     {
-      question: "How do I get started?",
-      answer: "Simply create an account using email, Google, or GitHub. Then explore projects, create your own, or join a community to start learning and sharing!"
+      question: 'What does the debugger analyze?',
+      answer: 'It evaluates circuit structure, noise sensitivity, scalability risk, and behavioral mismatch so researchers can isolate failure modes faster.',
     },
     {
-      question: "Do I need to have programming experience to use QuantaLab?",
-      answer: "Not at all! QuantaLab is designed for all skill levels. Beginners can learn from tutorials and examples, while experts can share advanced projects and contribute to the community."
+      question: 'Can I reproduce experiment runs?',
+      answer: 'Yes. Experiments support explicit seeds, shot counts, backend selection, version metadata, and exportable artifacts.',
     },
     {
-      question: "What file formats are supported for projects?",
-      answer: "We support .py (Python), .js (JavaScript), .json, .md (Markdown), and standard documentation files (.txt, .pdf)."
+      question: 'Which exports are supported?',
+      answer: 'The sandbox supports QASM, Qiskit-oriented output, and structured JSON metadata for research records.',
     },
     {
-      question: "How does the AI assistant work?",
-      answer: "Our AI assistant uses Google's Gemini API to provide coding assistance, debugging help, optimization suggestions, and educational guidance."
+      question: 'Does QuantaLab preserve existing API integrations?',
+      answer: 'Yes. The frontend calls the existing FastAPI endpoints for analysis, experiments, benchmarks, exports, and contact messages.',
     },
     {
-      question: "Is QuantaLab free to use?",
-      answer: "Yes! QuantaLab is completely free and open source. However, AI features may have usage limits to ensure fair access for all users."
+      question: 'Is QuantaLab open source?',
+      answer: 'Yes. The project is MIT licensed and intended for quantum developers, researchers, and students.',
     },
-    {
-      question: "Can I use QuantaLab for commercial projects?",
-      answer: "Yes, you can use QuantaLab for both personal and commercial projects. However, please review the license terms and ensure your usage complies with the MIT License."
-    },
-    {
-      question: "How do I report bugs or request features?",
-      answer: "You can report bugs or request features through our GitHub repository issues page, or use the contact form on this website."
-    },
-    {
-      question: "Is my data secure?",
-      answer: "Yes, we use industry-standard security practices including Firebase Authentication, encrypted connections (HTTPS), and secure database storage. Private projects are only visible to you."
-    },
-    {
-      question: "Can I contribute to QuantaLab?",
-      answer: "Absolutely! QuantaLab is open source and we welcome contributions. Check out our GitHub repository for contribution guidelines and code of conduct."
-    }
   ]
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-6">Frequently Asked Questions</h1>
-      <div className="space-y-6">
-        {faqs.map((faq, idx) => (
-          <div key={idx} className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold mb-2 text-gray-900">{faq.question}</h2>
-            <p className="text-gray-600">{faq.answer}</p>
-          </div>
-        ))}
+    <div className="ql-page">
+      <div className="ql-container max-w-5xl">
+        <div className="mb-10 border-b border-dashed border-border-default pb-8">
+          <div className="ql-eyebrow mb-3">FAQ</div>
+          <h1 className="ql-title">Frequently asked questions</h1>
+          <p className="ql-subtitle mt-4">Clear answers for researchers adopting QuantaLab in a lab or engineering workflow.</p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {faqs.map((faq) => (
+            <article key={faq.question} className="ql-card">
+              <h2 className="mb-3 text-lg font-semibold text-white">{faq.question}</h2>
+              <p className="text-sm leading-6 text-text-secondary">{faq.answer}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   )

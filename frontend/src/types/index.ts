@@ -80,3 +80,36 @@ export interface DebugReport {
   summary: string
   recommendations: string[]
 }
+
+// ==================== CIRCUIT VISUALIZER TYPES ====================
+
+export type GateCategory = 'single' | 'rotation' | 'multi' | 'three' | 'measurement'
+
+export interface GateDefinition {
+  id: string
+  label: string
+  category: GateCategory
+  color: string
+  description: string
+  numQubits: number
+  hasParams?: boolean
+}
+
+export interface GateCell {
+  gateId: string
+  label: string
+  params?: number[]
+  controlQubit?: number
+  targetQubit?: number
+  color: string
+  category: GateCategory
+}
+
+export interface SimulationResult {
+  probabilities: { state: string; probability: number }[]
+  amplitudes: { state: string; real: number; imag: number }[]
+  counts: Record<string, number>
+  fidelity: number
+  num_qubits: number
+  execution_time_ms?: number
+}

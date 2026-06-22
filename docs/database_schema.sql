@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    firebase_uid TEXT UNIQUE NOT NULL,
+    auth_user_id TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
     username TEXT UNIQUE NOT NULL,
     display_name TEXT,
@@ -195,22 +195,22 @@ ALTER TABLE circuits ENABLE ROW LEVEL SECURITY;
 -- RLS Policies (basic - adjust based on your needs)
 -- Users: Public read, own write
 CREATE POLICY "Users are viewable by everyone" ON users FOR SELECT USING (true);
-CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid()::text = firebase_uid);
+CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid()::text = auth_user_id);
 
 -- Projects: Public read for public projects, own write
-CREATE POLICY "Public projects are viewable by everyone" ON projects FOR SELECT USING (visibility = 'public' OR auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
-CREATE POLICY "Users can create projects" ON projects FOR INSERT WITH CHECK (auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
-CREATE POLICY "Users can update own projects" ON projects FOR UPDATE USING (auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
+CREATE POLICY "Public projects are viewable by everyone" ON projects FOR SELECT USING (visibility = 'public' OR auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
+CREATE POLICY "Users can create projects" ON projects FOR INSERT WITH CHECK (auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
+CREATE POLICY "Users can update own projects" ON projects FOR UPDATE USING (auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
 
 -- Posts: Public read, authenticated write
 CREATE POLICY "Posts are viewable by everyone" ON posts FOR SELECT USING (true);
-CREATE POLICY "Authenticated users can create posts" ON posts FOR INSERT WITH CHECK (auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
-CREATE POLICY "Users can update own posts" ON posts FOR UPDATE USING (auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
+CREATE POLICY "Authenticated users can create posts" ON posts FOR INSERT WITH CHECK (auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
+CREATE POLICY "Users can update own posts" ON posts FOR UPDATE USING (auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
 
 -- Comments: Public read, authenticated write
 CREATE POLICY "Comments are viewable by everyone" ON comments FOR SELECT USING (true);
-CREATE POLICY "Authenticated users can create comments" ON comments FOR INSERT WITH CHECK (auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
-CREATE POLICY "Users can update own comments" ON comments FOR UPDATE USING (auth.uid()::text IN (SELECT firebase_uid FROM users WHERE id = user_id));
+CREATE POLICY "Authenticated users can create comments" ON comments FOR INSERT WITH CHECK (auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
+CREATE POLICY "Users can update own comments" ON comments FOR UPDATE USING (auth.uid()::text IN (SELECT auth_user_id FROM users WHERE id = user_id));
 
 -- Note: For Supabase Realtime, you'll need to enable it in the Supabase dashboard
 -- Go to Database > Replication and enable replication for tables you want real-time updates

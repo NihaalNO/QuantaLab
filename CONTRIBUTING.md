@@ -21,7 +21,7 @@ This project is intended to be a safe, welcoming space for collaboration, and co
     cd QuantaLab
     ```
 3.  **Set up the environment** following the instructions in the [README.md](./README.md) for both Frontend and Backend.
-    - Ensure you have the necessary API keys (Firebase, Supabase, Google Gemini).
+    - Ensure you have the necessary API keys (Supabase, Supabase, Google Gemini).
 
 ## Development Workflow
 1.  **Create a Branch**: Always create a new branch for your work.

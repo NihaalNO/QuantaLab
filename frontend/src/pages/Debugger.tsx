@@ -13,6 +13,8 @@ measure q[0] -> c[0];
 measure q[1] -> c[1];
 measure q[2] -> c[2];`
 
+const timeline = ['Structural', 'Noise', 'Scalability', 'Behavior']
+
 export default function Debugger() {
   const [qasmCode, setQasmCode] = useState(DEFAULT_QASM)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -31,7 +33,7 @@ export default function Debugger() {
 
     try {
       const response = await api.post('/debugger/analyze', {
-        qasm_code: qasmCode
+        qasm_code: qasmCode,
       })
       setDebugReport(response.data)
     } catch (err: any) {
@@ -46,7 +48,7 @@ export default function Debugger() {
       case 'low': return 'badge-low'
       case 'medium': return 'badge-medium'
       case 'high': return 'badge-high'
-      default: return 'bg-raised border-border-dim text-text-secondary rounded px-2 py-0.5 text-xs'
+      default: return 'ql-chip'
     }
   }
 
@@ -57,268 +59,249 @@ export default function Debugger() {
   }
 
   return (
-    <div className="p-6 md:p-8 bg-void min-h-screen font-body text-text-primary max-w-7xl mx-auto">
-      <div className="mb-8 border-b border-border-dim pb-4">
-        <h1 className="text-2xl font-bold mb-1 tracking-wide uppercase">Quantum Debugger</h1>
-        <p className="text-text-secondary text-sm">
-          Algorithmic failure detection with 4-layer analysis: Structural, Noise, Scalability, and Behavioral.
-        </p>
-      </div>
-
-      <div className="dashboard-grid border border-border-dim rounded-sm overflow-hidden">
-        {/* QASM Input */}
-        <div className="panel col-span-1 md:col-span-5 flex flex-col h-full">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-sm font-semibold tracking-wide text-text-primary uppercase">QASM Definition</h2>
+    <div className="ql-page">
+      <div className="ql-container">
+        <div className="mb-8 flex flex-col justify-between gap-4 border-b border-dashed border-border-default pb-6 lg:flex-row lg:items-end">
+          <div>
+            <div className="ql-eyebrow mb-3">Quantum Debugger</div>
+            <h1 className="text-3xl font-normal tracking-[-0.03em] text-white md:text-4xl">Professional circuit diagnostics</h1>
+            <p className="mt-3 max-w-3xl text-text-secondary">
+              Structural analysis, noise modeling, scalability assessment, and behavioral mismatch detection in a split-panel workspace.
+            </p>
           </div>
-
-          <div className="relative flex-grow flex flex-col border border-border-default bg-[#0d1224] rounded-sm overflow-hidden">
-            {/* decorative wire */}
-            <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-accent-cyan/50"></div>
-
-            <textarea
-              value={qasmCode}
-              onChange={(e) => setQasmCode(e.target.value)}
-              className="w-full flex-grow font-mono text-xs p-4 pl-6 bg-transparent text-text-code focus:outline-none resize-none"
-              placeholder="Enter your OpenQASM 2.0 code here..."
-              spellCheck="false"
-            />
-          </div>
-
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={analyzeCircuit}
-              disabled={isAnalyzing}
-              className="px-6 py-2 bg-accent-cyan text-void rounded-[4px] font-mono tracking-widest text-xs font-bold hover:bg-accent-cyan/90 disabled:opacity-50 transition active:scale-95 flex items-center gap-2 uppercase"
-            >
-              {isAnalyzing && (
-                <span className="w-2 h-2 rounded-full bg-void animate-pulse"></span>
-              )}
-              {isAnalyzing ? 'Analyzing...' : 'Run Diagnostics'}
-            </button>
+          <div className="flex flex-wrap gap-2">
+            <span className="ql-chip">OpenQASM 2.0</span>
+            <span className="ql-chip border-accent-green/30 bg-accent-green/10 text-accent-green">4-layer engine</span>
           </div>
         </div>
 
-        {/* Results Panel */}
-        <div className="panel col-span-1 md:col-span-7 bg-base">
-          <h2 className="text-sm font-semibold tracking-wide text-text-primary uppercase mb-6 flex justify-between">
-            <span>Diagnostic Telemetry</span>
-            {debugReport && <span className="font-mono text-accent-emerald text-xs">STATUS: IDLE</span>}
-          </h2>
-
-          {error && (
-            <div className="bg-accent-rose/10 border-l-[3px] border-accent-rose p-3 mb-6 text-sm font-mono text-accent-rose">
-              ERR: {error}
+        <div className="grid gap-4 xl:grid-cols-[minmax(420px,0.9fr)_minmax(0,1.35fr)]">
+          <section className="ql-card-soft flex min-h-[680px] flex-col">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="ql-panel-title">QASM Definition</h2>
+              <span className="font-mono text-[11px] text-text-muted">{qasmCode.split('\n').length} lines</span>
             </div>
-          )}
 
-          {!debugReport && !isAnalyzing && !error && (
-            <div className="h-64 flex flex-col items-center justify-center text-text-muted border border-border-dim border-dashed rounded-sm">
-              <div className="font-mono text-xs mb-2">AWAITING INPUT...</div>
-              <p className="text-sm">Initiate diagnostics to populate telemetry panels.</p>
+            <div className="relative flex min-h-[460px] flex-1 overflow-hidden rounded-md border border-border-default bg-base">
+              <div className="absolute inset-y-0 left-0 w-[3px] bg-accent-green" />
+              <textarea
+                value={qasmCode}
+                onChange={(event) => setQasmCode(event.target.value)}
+                className="h-full w-full resize-none bg-transparent p-5 pl-7 font-mono text-[13px] leading-6 text-text-code focus:outline-none"
+                placeholder="Enter your OpenQASM 2.0 code here..."
+                spellCheck="false"
+              />
             </div>
-          )}
 
-          {isAnalyzing && (
-            <div className="h-64 flex flex-col items-center justify-center">
-              <div className="w-6 h-6 rounded-full border-t-2 border-accent-cyan animate-spin mb-4"></div>
-              <div className="font-mono text-xs text-text-secondary space-y-2 text-left bg-raised p-4 border border-border-dim rounded">
-                <p className="text-accent-emerald">✓ L1_STRUCTURAL_OK</p>
-                <p className="text-text-primary animate-pulse">→ L2_NOISE_SIMULATING...</p>
-                <p className="text-text-muted opacity-50">  L3_SCALABILITY_PENDING</p>
-                <p className="text-text-muted opacity-50">  L4_BEHAVIORAL_PENDING</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+              <div className="flex flex-wrap gap-2">
+                {timeline.map((item, index) => (
+                  <span key={item} className="ql-chip">
+                    <span className="font-mono text-accent-green">L{index + 1}</span>
+                    {item}
+                  </span>
+                ))}
               </div>
+              <button
+                onClick={analyzeCircuit}
+                disabled={isAnalyzing}
+                className="ql-button-primary font-mono text-xs uppercase tracking-[0.16em]"
+              >
+                {isAnalyzing && <span className="h-2 w-2 rounded-full bg-base animate-pulse" />}
+                {isAnalyzing ? 'Analyzing...' : 'Run diagnostics'}
+              </button>
             </div>
-          )}
+          </section>
 
-          {debugReport && (
-            <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar" style={{ maxHeight: 'calc(100vh - 250px)' }}>
-              {/* Summary */}
-              <div className="bg-[#0f1629] border-l-[3px] border-accent-violet p-4 hidden">
-                <p className="text-text-primary text-sm leading-relaxed">{debugReport.summary}</p>
+          <section className="ql-card-soft min-h-[680px]">
+            <div className="mb-5 flex items-center justify-between">
+              <h2 className="ql-panel-title">Diagnostic Telemetry</h2>
+              {debugReport ? (
+                <span className="ql-chip border-accent-green/30 bg-accent-green/10 text-accent-green">Analysis complete</span>
+              ) : (
+                <span className="ql-chip">Awaiting input</span>
+              )}
+            </div>
+
+            {error && (
+              <div className="mb-5 rounded-md border border-accent-rose/30 bg-accent-rose/10 p-4 font-mono text-sm text-accent-rose">
+                ERR: {error}
               </div>
+            )}
 
-              {/* Layer 1: Structural Analysis */}
-              <div className="metric-card">
-                <div className="flex items-center gap-3 mb-3 border-b border-border-dim pb-2">
-                  <span className="font-mono text-[10px] bg-border-default text-text-primary px-1.5 py-0.5 rounded">L1</span>
-                  <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest">Structural Analysis</h3>
+            {!debugReport && !isAnalyzing && !error && (
+              <div className="grid min-h-[520px] place-items-center rounded-md border border-dashed border-border-default text-center">
+                <div>
+                  <div className="mx-auto mb-4 h-12 w-12 rounded-md border border-border-default bg-raised" />
+                  <div className="font-mono text-xs uppercase tracking-[0.18em] text-text-muted">Awaiting input</div>
+                  <p className="mt-2 text-sm text-text-secondary">Run diagnostics to populate the analysis panels.</p>
+                </div>
+              </div>
+            )}
+
+            {isAnalyzing && (
+              <div className="grid min-h-[520px] place-items-center">
+                <div className="w-full max-w-md rounded-md border border-border-default bg-base p-5">
+                  <div className="mb-5 flex items-center gap-3">
+                    <div className="h-6 w-6 animate-spin rounded-full border-t-2 border-accent-green" />
+                    <div>
+                      <div className="font-medium text-white">Running diagnostic stack</div>
+                      <div className="font-mono text-[11px] text-text-muted">statevector and noise layers queued</div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 font-mono text-xs">
+                    <p className="text-accent-green">OK L1_STRUCTURAL_OK</p>
+                    <p className="animate-pulse text-text-primary">RUN L2_NOISE_SIMULATING...</p>
+                    <p className="text-text-muted">WAIT L3_SCALABILITY_PENDING</p>
+                    <p className="text-text-muted">WAIT L4_BEHAVIORAL_PENDING</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {debugReport && (
+              <div className="max-h-[calc(100vh-210px)] space-y-5 overflow-y-auto pr-2 custom-scrollbar">
+                <div className="grid gap-px overflow-hidden rounded-md border border-border-default bg-border-dim sm:grid-cols-4">
+                  {[
+                    ['Circuit Depth', debugReport.circuit_depth],
+                    ['Qubits', debugReport.num_qubits],
+                    ['Total Gates', debugReport.total_gates],
+                    ['MQ Density', `${(debugReport.multi_qubit_gate_density * 100).toFixed(1)}%`],
+                  ].map(([label, value]) => (
+                    <div key={label} className="bg-base p-4">
+                      <div className="text-[10px] uppercase tracking-[0.14em] text-text-muted">{label}</div>
+                      <div className="mt-2 font-mono text-2xl text-white">{value}</div>
+                    </div>
+                  ))}
                 </div>
 
-                <div className="grid grid-cols-4 gap-px bg-border-dim border border-border-dim rounded-sm overflow-hidden mb-3">
-                  <div className="bg-raised p-3 flex flex-col justify-between">
-                    <div className="text-[10px] text-text-muted uppercase mb-1 whitespace-nowrap overflow-hidden text-ellipsis">Circuit Depth</div>
-                    <div className="text-xl font-mono text-text-primary">{debugReport.circuit_depth}</div>
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <div className="ql-card">
+                    <div className="mb-3 flex items-center gap-3">
+                      <span className="ql-code-chip text-accent-green">L1</span>
+                      <h3 className="ql-panel-title">Structural Analysis</h3>
+                    </div>
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {Object.entries(debugReport.gate_distribution).map(([gate, count]) => (
+                        <span key={gate} className="ql-code-chip">
+                          {gate}: <span className="ml-1 text-white">{count}</span>
+                        </span>
+                      ))}
+                    </div>
+                    {debugReport.idle_qubits?.length > 0 && (
+                      <div className="rounded-md border border-accent-amber/30 bg-accent-amber/10 p-3 font-mono text-xs text-accent-amber">
+                        Idle qubits detected: [{debugReport.idle_qubits.join(', ')}]
+                      </div>
+                    )}
+                    {debugReport.redundancy_patterns?.length > 0 && (
+                      <ul className="mt-3 space-y-2 text-sm text-text-secondary">
+                        {debugReport.redundancy_patterns.map((pattern) => (
+                          <li key={pattern}>- {pattern}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
-                  <div className="bg-raised p-3 flex flex-col justify-between">
-                    <div className="text-[10px] text-text-muted uppercase mb-1">Qubits</div>
-                    <div className="text-xl font-mono text-text-primary">{debugReport.num_qubits}</div>
-                  </div>
-                  <div className="bg-raised p-3 flex flex-col justify-between">
-                    <div className="text-[10px] text-text-muted uppercase mb-1">Total Gates</div>
-                    <div className="text-xl font-mono text-text-primary">{debugReport.total_gates}</div>
-                  </div>
-                  <div className="bg-raised p-3 flex flex-col justify-between">
-                    <div className="text-[10px] text-text-muted uppercase mb-1 whitespace-nowrap overflow-hidden text-ellipsis">MQ Density</div>
-                    <div className="text-xl font-mono text-accent-cyan">
-                      {(debugReport.multi_qubit_gate_density * 100).toFixed(1)}%
+
+                  <div className="ql-card">
+                    <div className="mb-3 flex items-center gap-3">
+                      <span className="ql-code-chip text-accent-green">L2</span>
+                      <h3 className="ql-panel-title">Noise Sensitivity</h3>
+                    </div>
+                    <div className="mb-4 flex items-end justify-between">
+                      <span className="text-sm text-text-secondary">Sensitivity index</span>
+                      <span className={`font-mono text-3xl ${debugReport.noise_sensitivity_index < 0.3 ? 'text-accent-emerald' : debugReport.noise_sensitivity_index < 0.6 ? 'text-accent-amber' : 'text-accent-rose'}`}>
+                        {(debugReport.noise_sensitivity_index * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-border-dim">
+                      <div
+                        className="h-full rounded-full bg-accent-green shadow-[0_0_12px_rgba(0,217,146,0.45)]"
+                        style={{ width: `${Math.min(debugReport.noise_sensitivity_index * 100, 100)}%` }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        ['Depol', debugReport.depolarizing_fidelity],
+                        ['Amp', debugReport.amplitude_damping_fidelity],
+                        ['Phase', debugReport.phase_damping_fidelity],
+                      ].map(([label, value]) => (
+                        <div key={label} className="rounded-md border border-border-default bg-raised p-3 text-center">
+                          <div className="text-[10px] uppercase text-text-muted">{label}</div>
+                          <div className={`mt-1 font-mono text-lg ${getFidelityColor(Number(value))}`}>
+                            {(Number(value) * 100).toFixed(1)}%
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Gate Distribution */}
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <span className="text-[10px] text-text-muted uppercase self-center w-16">Dist:</span>
-                  {Object.entries(debugReport.gate_distribution).map(([gate, count]) => (
-                    <span
-                      key={gate}
-                      className="px-2 py-0.5 bg-subtle border border-border-default text-text-secondary font-mono text-[11px] rounded-sm"
-                    >
-                      {gate}:<span className="text-white ml-1">{count}</span>
-                    </span>
-                  ))}
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <div className="ql-card">
+                    <div className="mb-3 flex items-center gap-3">
+                      <span className="ql-code-chip text-accent-green">L3</span>
+                      <h3 className="ql-panel-title">Scalability Assessment</h3>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between rounded-md border border-border-default bg-raised p-3">
+                        <span className="text-sm text-text-secondary">Scalability risk</span>
+                        <span className={getRiskColorClass(debugReport.scalability_risk)}>{debugReport.scalability_risk.toUpperCase()}</span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-md border border-border-default bg-raised p-3">
+                        <span className="text-sm text-text-secondary">Risk vector score</span>
+                        <span className="font-mono text-white">{(debugReport.risk_score || 0).toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-md border border-border-default bg-raised p-3">
+                        <span className="text-sm text-text-secondary">Transpilation cost</span>
+                        <span className="font-mono text-accent-green">{debugReport.transpilation_cost.toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="ql-card">
+                    <div className="mb-3 flex items-center gap-3">
+                      <span className="ql-code-chip text-accent-green">L4</span>
+                      <h3 className="ql-panel-title">Behavioral Mismatch</h3>
+                    </div>
+                    {debugReport.kl_divergence !== null && debugReport.kl_divergence !== undefined ? (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between rounded-md border border-border-default bg-raised p-3">
+                          <span className="text-sm text-text-secondary">KL divergence</span>
+                          <span className={`font-mono ${debugReport.kl_divergence < 0.1 ? 'text-accent-emerald' : debugReport.kl_divergence < 0.5 ? 'text-accent-amber' : 'text-accent-rose'}`}>
+                            {debugReport.kl_divergence.toFixed(4)}
+                          </span>
+                        </div>
+                        {debugReport.kl_divergence_symmetrized !== null && (
+                          <div className="flex items-center justify-between rounded-md border border-border-default bg-raised p-3">
+                            <span className="text-sm text-text-secondary">Symmetrized KL</span>
+                            <span className="font-mono text-white">{debugReport.kl_divergence_symmetrized.toFixed(4)}</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="rounded-md border border-dashed border-border-default p-5 text-center font-mono text-xs text-text-muted">
+                        KL divergence skipped for this circuit scale.
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Idle Qubits */}
-                {debugReport.idle_qubits && debugReport.idle_qubits.length > 0 && (
-                  <div className="bg-[#2d1f05] border-l-[3px] border-accent-amber p-2 pl-3">
-                    <div className="font-mono text-[11px] text-accent-amber">WARN: Idle Qubits detected: [{debugReport.idle_qubits.join(', ')}]</div>
-                  </div>
-                )}
-
-                {/* Redundancy Patterns */}
-                {debugReport.redundancy_patterns && debugReport.redundancy_patterns.length > 0 && (
-                  <div className="bg-[#2d1f05] border-l-[3px] border-accent-amber p-2 pl-3 mt-2">
-                    <div className="font-mono text-[11px] text-accent-amber mb-1">WARN: Redundancy Patterns Detected:</div>
-                    <ul className="text-[11px] text-[#d4993a] list-disc list-inside font-mono">
-                      {debugReport.redundancy_patterns.map((pattern, idx) => (
-                        <li key={idx}>{pattern}</li>
+                {debugReport.recommendations?.length > 0 && (
+                  <div className="ql-card border-accent-green/30 bg-accent-green/5">
+                    <h3 className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-accent-green">Suggested fixes</h3>
+                    <ul className="space-y-2">
+                      {debugReport.recommendations.map((rec) => (
+                        <li key={rec} className="flex items-start gap-2 text-sm text-text-primary">
+                          <span className="mt-0.5 font-mono text-accent-green">&gt;</span>
+                          <span>{rec}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
                 )}
               </div>
-
-              {/* Layer 2: Noise Sensitivity */}
-              <div className="metric-card">
-                <div className="flex items-center gap-3 mb-3 border-b border-border-dim pb-2">
-                  <span className="font-mono text-[10px] bg-border-default text-text-primary px-1.5 py-0.5 rounded">L2</span>
-                  <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest">Noise Sensitivity</h3>
-                </div>
-
-                <div className="bg-raised border border-border-dim p-4 rounded-sm mb-3">
-                  <div className="flex justify-between items-end mb-2">
-                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest">Sensitivity Index</span>
-                    <span className={`font-mono text-2xl leading-none ${debugReport.noise_sensitivity_index < 0.3 ? 'text-accent-emerald' :
-                        debugReport.noise_sensitivity_index < 0.6 ? 'text-accent-amber' : 'text-accent-rose'
-                      }`}>
-                      {(debugReport.noise_sensitivity_index * 100).toFixed(1)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-border-dim h-[3px]">
-                    <div
-                      className={`h-[3px] shadow-[0_0_8px_rgba(0,229,255,0.4)] ${debugReport.noise_sensitivity_index < 0.3 ? 'bg-accent-emerald' :
-                          debugReport.noise_sensitivity_index < 0.6 ? 'bg-accent-amber' : 'bg-accent-rose'
-                        }`}
-                      style={{ width: `${Math.min(debugReport.noise_sensitivity_index * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-px bg-border-dim border border-border-dim rounded-sm overflow-hidden">
-                  <div className="bg-raised p-3 text-center">
-                    <div className="text-[10px] text-text-muted uppercase mb-1">Depolarizing</div>
-                    <div className={`font-mono text-lg metric-value ${getFidelityColor(debugReport.depolarizing_fidelity)}`}>
-                      {(debugReport.depolarizing_fidelity * 100).toFixed(1)}%
-                    </div>
-                  </div>
-                  <div className="bg-raised p-3 text-center">
-                    <div className="text-[10px] text-text-muted uppercase mb-1 truncate">Amp. Damping</div>
-                    <div className={`font-mono text-lg metric-value ${getFidelityColor(debugReport.amplitude_damping_fidelity)}`}>
-                      {(debugReport.amplitude_damping_fidelity * 100).toFixed(1)}%
-                    </div>
-                  </div>
-                  <div className="bg-raised p-3 text-center">
-                    <div className="text-[10px] text-text-muted uppercase mb-1 truncate">Phase Damping</div>
-                    <div className={`font-mono text-lg metric-value ${getFidelityColor(debugReport.phase_damping_fidelity)}`}>
-                      {(debugReport.phase_damping_fidelity * 100).toFixed(1)}%
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Layer 3: Scalability */}
-              <div className="metric-card">
-                <div className="flex items-center gap-3 mb-3 border-b border-border-dim pb-2">
-                  <span className="font-mono text-[10px] bg-border-default text-text-primary px-1.5 py-0.5 rounded">L3</span>
-                  <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest">Scalability Assessment</h3>
-                </div>
-
-                <div className="flex flex-col gap-px bg-border-dim border border-border-dim rounded-sm">
-                  <div className="flex justify-between items-center py-2 px-4 bg-raised">
-                    <span className="text-xs text-text-secondary uppercase tracking-wide">Scalability Risk</span>
-                    <span className={getRiskColorClass(debugReport.scalability_risk)}>
-                      {debugReport.scalability_risk.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-4 bg-raised">
-                    <span className="text-xs text-text-secondary uppercase tracking-wide">Risk Vector Score</span>
-                    <span className="font-mono text-sm text-text-primary">{(debugReport.risk_score || 0).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-4 bg-raised">
-                    <span className="text-xs text-text-secondary uppercase tracking-wide">Transpilation Cost</span>
-                    <span className="font-mono text-sm text-accent-cyan">{debugReport.transpilation_cost.toFixed(2)}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Layer 4: Behavioral Mismatch */}
-              <div className="metric-card">
-                <div className="flex items-center gap-3 mb-3 border-b border-border-dim pb-2">
-                  <span className="font-mono text-[10px] bg-border-default text-text-primary px-1.5 py-0.5 rounded">L4</span>
-                  <h3 className="text-xs font-bold text-text-secondary uppercase tracking-widest">Behavioral Mismatch</h3>
-                </div>
-
-                {debugReport.kl_divergence !== null && debugReport.kl_divergence !== undefined ? (
-                  <div className="flex flex-col gap-px bg-border-dim border border-border-dim rounded-sm">
-                    <div className="flex justify-between items-center py-2 px-4 bg-raised">
-                      <span className="text-xs text-text-secondary uppercase tracking-wide">KV Divergence</span>
-                      <span className={`font-mono text-sm ${debugReport.kl_divergence < 0.1 ? 'text-accent-emerald' :
-                          debugReport.kl_divergence < 0.5 ? 'text-accent-amber' : 'text-accent-rose'
-                        }`}>
-                        {debugReport.kl_divergence.toFixed(4)}
-                      </span>
-                    </div>
-                    {debugReport.kl_divergence_symmetrized !== null && (
-                      <div className="flex justify-between items-center py-2 px-4 bg-raised">
-                        <span className="text-xs text-text-secondary uppercase tracking-wide">Symmetrized KL</span>
-                        <span className="font-mono text-sm text-text-primary">{debugReport.kl_divergence_symmetrized.toFixed(4)}</span>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-3 border border-border-dim bg-raised text-text-muted text-[11px] font-mono">
-                    KL DIVERGENCE SKIPPED (CIRCUIT SCALE OUT OF BOUNDS)
-                  </div>
-                )}
-              </div>
-
-              {/* Fix Recommendations */}
-              {debugReport.recommendations && debugReport.recommendations.length > 0 && (
-                <div className="metric-card mt-6 border border-border-bright bg-[#0a1429] p-4 rounded-sm">
-                  <h3 className="font-mono text-xs text-accent-cyan mb-3 tracking-widest">// RECOMMENDED OPTIMIZATIONS</h3>
-                  <ul className="space-y-2">
-                    {debugReport.recommendations.map((rec, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-text-primary">
-                        <span className="text-accent-cyan font-mono leading-tight mt-0.5">»</span>
-                        <span>{rec}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
+            )}
+          </section>
         </div>
       </div>
     </div>

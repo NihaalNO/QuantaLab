@@ -8,11 +8,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['"IBM Plex Sans"', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
+        body: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', 'monospace'],
       },
       colors: {
-        // Scientific Dark Lab palette
+        // VoltAgent-inspired scientific canvas
         void: 'var(--bg-void)',
         base: 'var(--bg-base)',
         raised: 'var(--bg-raised)',
@@ -26,7 +26,9 @@ export default {
         },
 
         accent: {
+          green: 'var(--accent-green)',
           cyan: 'var(--accent-cyan)',
+          blue: 'var(--accent-blue)',
           violet: 'var(--accent-violet)',
           amber: 'var(--accent-amber)',
           emerald: 'var(--accent-emerald)',

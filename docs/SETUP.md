@@ -1,178 +1,87 @@
-# X-Repo Setup Guide
-
-This guide will help you set up X-Repo on your local machine.
+# QuantaLab Setup Guide
 
 ## Prerequisites
 
-1. **Node.js 18+** and npm
-2. **Python 3.10+** and pip
-3. **Firebase Account** - Create a project at https://console.firebase.google.com
-4. **Supabase Account** - Create a project at https://supabase.com
-5. **Google Gemini API Key** - Get from https://ai.google.dev/
+1. Node.js 18+ and npm
+2. Python 3.10+ and pip
+3. Supabase project
+4. Google OAuth client for Supabase Auth
+5. Google Gemini API key
 
-## Step 1: Firebase Setup
+## 1. Supabase Setup
 
-1. Go to Firebase Console and create a new project
-2. Enable Authentication:
-   - Go to Authentication > Sign-in method
-   - Enable Email/Password, Google, and GitHub providers
-3. Get your Firebase config:
-   - Go to Project Settings > General
-   - Scroll down to "Your apps" and click the web icon
-   - Copy the Firebase configuration object
-4. Get Firebase Admin SDK credentials:
-   - Go to Project Settings > Service Accounts
-   - Click "Generate new private key"
-   - Save the JSON file securely
+1. Create a Supabase project.
+2. Go to Project Settings > API and copy:
+   - Project URL
+   - anon public key
+   - service role key for backend-only use
+3. Go to Authentication > Providers > Google.
+4. Enable Google and add your OAuth client ID and secret.
+5. Add redirect URLs:
+   - `http://localhost:3000/auth/callback`
+   - your production callback URL
+6. Run `quantalab_auth_activity_schema.sql` in the Supabase SQL editor.
+7. In Authentication > Providers > Email, keep email/password authentication enabled.
 
-## Step 2: Supabase Setup
+## 2. Frontend Setup
 
-1. Create a new Supabase project
-2. Get your project URL and anon key:
-   - Go to Project Settings > API
-   - Copy the "Project URL" and "anon public" key
-3. Get your service role key:
-   - In the same API settings page
-   - Copy the "service_role" key (keep this secret!)
-4. Set up the database:
-   - Go to SQL Editor
-   - Copy and paste the contents of `docs/database_schema.sql`
-   - Run the SQL script
-5. Set up Storage:
-   - Go to Storage
-   - Create a new bucket named "project-files"
-   - Set it to public if you want public file access
-
-## Step 3: Google Gemini API Setup
-
-1. Go to https://ai.google.dev/
-2. Get an API key
-3. Save it for the backend configuration
-
-## Step 4: Frontend Setup
-
-1. Navigate to the frontend directory:
 ```bash
-cd x-repo/frontend
-```
-
-2. Install dependencies:
-```bash
+cd frontend
 npm install
-```
-
-3. Create `.env` file:
-```bash
-cp .env.example .env
-```
-
-4. Fill in your Firebase and Supabase credentials in `.env`
-
-5. Start the development server:
-```bash
+cp env.example .env
 npm run dev
 ```
 
-The frontend will be available at http://localhost:3000
+Required frontend variables:
 
-## Step 5: Backend Setup
-
-1. Navigate to the backend directory:
-```bash
-cd x-repo/backend
+```env
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
-2. Create a virtual environment:
+The frontend runs at `http://localhost:3000` by default.
+
+## 3. Backend Setup
+
 ```bash
+cd backend
 python -m venv venv
-# On Windows:
 venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-3. Install dependencies:
-```bash
 pip install -r requirements.txt
-```
-
-4. Create `.env` file:
-```bash
-# On Windows PowerShell:
-Copy-Item .env.example .env
-# On macOS/Linux:
-cp .env.example .env
-```
-
-5. Fill in your credentials in `.env`:
-   - `FIREBASE_CREDENTIALS_PATH`: Path to your Firebase service account JSON file
-   - OR `FIREBASE_CREDENTIALS_JSON`: The JSON content as a string
-   - `SUPABASE_URL`: Your Supabase project URL
-   - `SUPABASE_SERVICE_KEY`: Your Supabase service role key
-   - `GEMINI_API_KEY`: Your Google Gemini API key
-
-6. Start the backend server:
-```bash
+copy env.example .env
 uvicorn main:app --reload
 ```
 
-The backend will be available at http://localhost:8000
-API documentation at http://localhost:8000/docs
+Required backend variables:
 
-## Step 6: Verify Setup
+```env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_SERVICE_KEY=your_supabase_service_role_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+```
 
-1. Open http://localhost:3000 in your browser
-2. Try to register a new account
-3. Check that the backend receives the request (check terminal)
-4. Verify the user was created in Supabase (check the users table)
+The backend runs at `http://localhost:8000`; API docs are available at `http://localhost:8000/docs`.
+
+## 4. Verify Setup
+
+1. Open `http://localhost:3000`.
+2. Click `Get Started`.
+3. Sign in with Google.
+4. Confirm you are redirected to `/dashboard`.
+5. Confirm a profile row is created in Supabase.
 
 ## Troubleshooting
 
-### Firebase Authentication Issues
-- Make sure all Firebase environment variables are set correctly
-- Verify that Email/Password authentication is enabled in Firebase Console
-- Check browser console for Firebase errors
+**OAuth callback fails**
+- Confirm the redirect URL in Supabase exactly matches the app origin plus `/auth/callback`.
+- Confirm Google provider credentials are enabled in Supabase.
 
-### Supabase Connection Issues
-- Verify your Supabase URL and keys are correct
-- Check that the database schema was created successfully
-- Ensure RLS policies allow your operations
+**Dashboard stays empty**
+- Run `quantalab_auth_activity_schema.sql`.
+- Confirm RLS policies exist and the user is authenticated.
 
-### Backend Import Errors
-- Make sure you're in the virtual environment
-- Verify all dependencies are installed: `pip list`
-- Check that you're running from the backend directory
-
-### Qiskit Installation Issues
-- Qiskit requires certain system dependencies on Linux
-- On Windows, make sure you have Visual C++ Build Tools if needed
-- Try: `pip install --upgrade qiskit qiskit-aer`
-
-## Next Steps
-
-Once setup is complete, you can:
-1. Explore the API documentation at http://localhost:8000/docs
-2. Start building features
-3. Check the PRD for feature requirements
-4. Contribute to the project!
-
-## Environment Variables Reference
-
-### Frontend (.env)
-- `VITE_FIREBASE_API_KEY`
-- `VITE_FIREBASE_AUTH_DOMAIN`
-- `VITE_FIREBASE_PROJECT_ID`
-- `VITE_FIREBASE_STORAGE_BUCKET`
-- `VITE_FIREBASE_MESSAGING_SENDER_ID`
-- `VITE_FIREBASE_APP_ID`
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
-- `VITE_API_BASE_URL`
-
-### Backend (.env)
-- `FIREBASE_CREDENTIALS_PATH` or `FIREBASE_CREDENTIALS_JSON`
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_KEY`
-- `GEMINI_API_KEY`
-- `ALLOWED_ORIGINS`
-
+**Backend connection fails**
+- Confirm Supabase backend variables are set.
+- Confirm CORS includes the frontend origin.

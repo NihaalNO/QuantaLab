@@ -11,8 +11,9 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    setError('')
     try {
       await api.post('/contact', formData)
       setSubmitted(true)
@@ -24,71 +25,84 @@ export default function Contact() {
 
   if (submitted) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
-          Thank you! Your message has been sent.
+      <div className="ql-page">
+        <div className="ql-container max-w-2xl">
+          <div className="ql-card border-accent-green/30 bg-accent-green/10">
+            <div className="ql-eyebrow mb-3">Message sent</div>
+            <p className="text-text-primary">Thank you. Your message has been sent to the QuantaLab team.</p>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-6">Contact Us</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            {error}
+    <div className="ql-page">
+      <div className="ql-container grid max-w-6xl gap-8 lg:grid-cols-[0.8fr_1fr]">
+        <div>
+          <div className="ql-eyebrow mb-3">Support</div>
+          <h1 className="ql-title">Contact QuantaLab</h1>
+          <p className="ql-subtitle mt-4">
+            Share research workflow questions, integration issues, or feedback about the quantum debugging experience.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="ql-card-soft space-y-4">
+          {error && (
+            <div className="rounded-md border border-accent-rose/30 bg-accent-rose/10 px-4 py-3 font-mono text-sm text-accent-rose">
+              {error}
+            </div>
+          )}
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-text-secondary" htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              required
+              className="ql-input"
+              value={formData.name}
+              onChange={(event) => setFormData({ ...formData, name: event.target.value })}
+            />
           </div>
-        )}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input
-            type="text"
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
-            type="email"
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-          <input
-            type="text"
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            value={formData.subject}
-            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-          <textarea
-            required
-            rows={6}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          />
-        </div>
-        <button
-          type="submit"
-          className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
-        >
-          Send Message
-        </button>
-      </form>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-text-secondary" htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              required
+              className="ql-input"
+              value={formData.email}
+              onChange={(event) => setFormData({ ...formData, email: event.target.value })}
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-text-secondary" htmlFor="subject">Subject</label>
+            <input
+              id="subject"
+              type="text"
+              required
+              className="ql-input"
+              value={formData.subject}
+              onChange={(event) => setFormData({ ...formData, subject: event.target.value })}
+            />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-text-secondary" htmlFor="message">Message</label>
+            <textarea
+              id="message"
+              required
+              rows={6}
+              className="ql-input resize-none"
+              value={formData.message}
+              onChange={(event) => setFormData({ ...formData, message: event.target.value })}
+            />
+          </div>
+          <button type="submit" className="ql-button-primary w-full sm:w-auto">
+            Send message
+          </button>
+        </form>
+      </div>
     </div>
   )
 }
-

@@ -5,16 +5,16 @@ import type { Experiment, ExperimentResult, BenchmarkResult } from '../types'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts'
 
 // Recharts theme config for Quantalab
-const chartColors = ['#00e5ff', '#7c3aed', '#f59e0b', '#10b981', '#f43f5e', '#38bdf8']
+const chartColors = ['#00d992', '#38e8ff', '#9b5cff', '#4f8cff', '#f5b64b', '#f25f7a']
 const chartTheme = {
   backgroundColor: 'transparent',
   fontFamily: 'JetBrains Mono, monospace',
   fontSize: 11,
   colors: chartColors,
-  gridColor: '#1e2a45',
-  axisColor: '#4a5a7a',
-  tooltipBackground: '#0f1629',
-  tooltipBorder: '#253354',
+  gridColor: '#282625',
+  axisColor: '#8b949e',
+  tooltipBackground: '#151515',
+  tooltipBorder: '#3d3a39',
 }
 
 const DEFAULT_QASM = `OPENQASM 2.0;
@@ -166,12 +166,17 @@ export default function Experiments() {
   }
 
   return (
-    <div className="p-6 md:p-8 bg-void min-h-screen font-body text-text-primary max-w-[1400px] mx-auto">
-      <div className="mb-8 border-b border-border-dim pb-4">
-        <h1 className="text-2xl font-bold mb-1 tracking-wide uppercase">Quantum Research Sandbox</h1>
-        <p className="text-text-secondary text-sm">
+    <div className="ql-page">
+      <div className="ql-container max-w-[1400px]">
+      <div className="mb-8 flex flex-col justify-between gap-4 border-b border-dashed border-border-default pb-6 md:flex-row md:items-end">
+        <div>
+        <div className="ql-eyebrow mb-3">Research Sandbox</div>
+        <h1 className="text-3xl font-normal tracking-[-0.03em] text-white md:text-4xl">Experiment management workspace</h1>
+        <p className="mt-3 max-w-3xl text-text-secondary">
           Create versioned experiments, run reproducible simulations, and compare backends.
         </p>
+        </div>
+        <button onClick={() => setActiveTab('create')} className="ql-button-primary">New experiment</button>
       </div>
 
       {!currentUser && (
@@ -234,7 +239,7 @@ export default function Experiments() {
                 <h2 className="text-sm font-semibold tracking-wide uppercase text-text-primary">Your Experiments</h2>
                 <button
                   onClick={() => setActiveTab('create')}
-                  className="px-4 py-1.5 bg-accent-cyan text-void rounded-sm font-mono text-xs font-bold hover:bg-accent-cyan/90 transition uppercase"
+                  className="ql-button-primary min-h-0 px-4 py-1.5 font-mono text-xs uppercase"
                 >
                   New Experiment
                 </button>
@@ -244,7 +249,7 @@ export default function Experiments() {
                 <div className="text-center py-12 bg-base border border-border-dim border-dashed rounded-sm panel">
                   <p className="text-text-muted mb-4 text-sm font-mono uppercase">No experiments yet.</p>
                   <Link
-                    to="/experiments"
+                    to="/dashboard/sandbox"
                     onClick={() => setActiveTab('create')}
                     className="text-accent-cyan hover:underline text-sm font-mono uppercase"
                   >
@@ -278,7 +283,7 @@ export default function Experiments() {
                           <button
                             onClick={() => runExperiment(experiment)}
                             disabled={isLoading}
-                            className="px-3 py-1 bg-accent-cyan text-void text-xs font-mono font-bold rounded-sm hover:bg-accent-cyan/90 disabled:opacity-50"
+                            className="rounded-md bg-accent-green px-3 py-1 font-mono text-xs font-bold text-base hover:bg-[#2fd6a1] disabled:opacity-50"
                           >
                             RUN
                           </button>
@@ -436,7 +441,7 @@ export default function Experiments() {
                 <button
                   onClick={createExperiment}
                   disabled={isLoading}
-                  className="px-5 py-2 bg-accent-cyan text-void font-bold rounded-sm font-mono text-xs uppercase hover:bg-accent-cyan/90 disabled:opacity-50 transition"
+                  className="ql-button-primary min-h-0 px-5 py-2 font-mono text-xs uppercase"
                 >
                   {isLoading ? 'Creating...' : 'Create Experiment'}
                 </button>
@@ -593,7 +598,7 @@ export default function Experiments() {
                     <tr className="hover:bg-subtle transition-colors">
                       <td className="py-3 px-4 text-text-muted">Execution Time (ms)</td>
                       {benchmarkResult.backends.map((backend) => (
-                        <td key={backend} className="py-3 px-4 border-l border-border-dim text-accent-indigo">
+                        <td key={backend} className="py-3 px-4 border-l border-border-dim text-accent-blue">
                           {benchmarkResult.comparisons[backend]?.execution_time_ms
                             ? benchmarkResult.comparisons[backend].execution_time_ms.toFixed(2)
                             : '-'}
@@ -607,6 +612,7 @@ export default function Experiments() {
           )}
         </div>
       )}
+      </div>
     </div>
   )
 }
