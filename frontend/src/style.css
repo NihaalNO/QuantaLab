@@ -237,6 +237,41 @@
     scrollbar-color: var(--border-default) var(--bg-base);
     scrollbar-width: thin;
   }
+
+  .gate-palette-item {
+    --gate-color: var(--accent-green);
+    transform: translateY(0) scale(1);
+    will-change: transform, box-shadow, border-color;
+  }
+
+  .gate-palette-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--gate-color) 22%, transparent);
+  }
+
+  .gate-palette-item-dragging {
+    animation: gateDragLift 0.9s ease-in-out infinite;
+    border-color: color-mix(in srgb, var(--gate-color) 70%, var(--border-bright));
+    background: color-mix(in srgb, var(--gate-color) 12%, var(--bg-base));
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--gate-color) 28%, transparent),
+      0 0 24px color-mix(in srgb, var(--gate-color) 32%, transparent);
+  }
+
+  .gate-palette-orbit {
+    position: absolute;
+    inset: 5px;
+    border: 1px solid color-mix(in srgb, var(--gate-color) 32%, transparent);
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8);
+  }
+
+  .gate-palette-item-dragging .gate-palette-orbit {
+    animation: gateOrbitPulse 0.9s ease-out infinite;
+    opacity: 1;
+  }
 }
 
 @layer utilities {
@@ -252,6 +287,29 @@
   .quantum-orbit-slow {
     animation: orbit 22s linear infinite reverse;
     transform-origin: center;
+  }
+
+  .circuit-drop-target {
+    animation: dropTargetPulse 0.8s ease-in-out infinite;
+    pointer-events: none;
+    transform-origin: center;
+  }
+
+  .circuit-gate-placed .gate-node {
+    animation: gatePlacedPop 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: center;
+  }
+
+  .gate-impact-ring {
+    animation: gateImpactRing 0.52s ease-out forwards;
+    transform-origin: center;
+    pointer-events: none;
+  }
+
+  .gate-impact-halo {
+    animation: gateImpactHalo 0.52s ease-out forwards;
+    transform-origin: center;
+    pointer-events: none;
   }
 }
 
@@ -287,6 +345,71 @@
   }
   50% {
     box-shadow: 0 0 18px 4px rgba(0, 217, 146, 0.24);
+  }
+}
+
+@keyframes gateDragLift {
+  0%, 100% {
+    transform: translateY(-2px) scale(1.03);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.07);
+  }
+}
+
+@keyframes gateOrbitPulse {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.76);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.22);
+  }
+}
+
+@keyframes dropTargetPulse {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes gatePlacedPop {
+  0% {
+    opacity: 0.45;
+    transform: scale(0.68);
+  }
+  62% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes gateImpactRing {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.55);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes gateImpactHalo {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.76);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.24);
   }
 }
 

@@ -29,6 +29,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function GatePalette() {
   const setDraggedGate = useCircuitUIStore((state) => state.setDraggedGate)
+  const draggedGate = useCircuitUIStore((state) => state.draggedGate)
 
   const grouped = GATE_LIBRARY.reduce((acc, gate) => {
     if (!acc[gate.category]) acc[gate.category] = []
@@ -60,8 +61,12 @@ export default function GatePalette() {
                 onDragStart={(event) => handleDragStart(event, gate)}
                 onDragEnd={() => setDraggedGate(null)}
                 title={gate.description}
-                className="group relative flex cursor-grab flex-col items-center justify-center rounded-md border border-border-default bg-base p-2 transition-all hover:border-border-bright hover:bg-raised active:cursor-grabbing"
+                className={`gate-palette-item group relative flex cursor-grab flex-col items-center justify-center rounded-md border border-border-default bg-base p-2 transition-all hover:border-border-bright hover:bg-raised active:cursor-grabbing ${
+                  draggedGate === gate.id ? 'gate-palette-item-dragging' : ''
+                }`}
+                style={{ '--gate-color': gate.color } as React.CSSProperties}
               >
+                <span className="gate-palette-orbit" aria-hidden="true" />
                 <div className="mb-0.5 font-mono text-sm font-bold leading-none" style={{ color: gate.color }}>
                   {gate.label}
                 </div>

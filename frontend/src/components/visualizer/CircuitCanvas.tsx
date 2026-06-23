@@ -12,7 +12,7 @@ const LABEL_WIDTH = 48
 export default function CircuitCanvas() {
   const dispatch = useDispatch()
   const { qubits, moments, circuitMatrix } = useSelector((s: RootState) => s.circuit)
-  const { hoveredCell, selectedCell, setHoveredCell, setSelectedCell } = useCircuitUIStore()
+  const { hoveredCell, selectedCell, placedCell, draggedGate, setHoveredCell, setSelectedCell, setPlacedCell } = useCircuitUIStore()
 
   const svgWidth = LABEL_WIDTH + moments * CELL_SIZE + WIRE_PADDING
   const svgHeight = qubits * CELL_SIZE + WIRE_PADDING * 2
@@ -48,6 +48,10 @@ export default function CircuitCanvas() {
     }
 
     dispatch(placeGate({ qubit, moment, gate: cell }))
+    setPlacedCell({ qubit, moment })
+    window.setTimeout(() => {
+      useCircuitUIStore.getState().setPlacedCell(null)
+    }, 520)
     useCircuitUIStore.getState().setDraggedGate(null)
   }
 
@@ -153,17 +157,44 @@ export default function CircuitCanvas() {
             const cell = circuitMatrix[q]?.[m]
             const isHovered = hoveredCell?.qubit === q && hoveredCell?.moment === m
             const isSelected = selectedCell?.qubit === q && selectedCell?.moment === m
+            const isPlaced = placedCell?.qubit === q && placedCell?.moment === m
+            const isDropReady = Boolean(draggedGate && isHovered)
 
             return (
               <g key={`cell-${q}-${m}`}>
+                {isDropReady && (
+                  <g className="circuit-drop-target">
+                    <rect
+                      x={x + 5}
+                      y={y + 5}
+                      width={CELL_SIZE - 10}
+                      height={CELL_SIZE - 10}
+                      rx="8"
+                      fill="rgba(0,217,146,0.09)"
+                      stroke="var(--accent-green)"
+                      strokeWidth="1.2"
+                      strokeDasharray="4,3"
+                    />
+                    <circle
+                      cx={x + CELL_SIZE / 2}
+                      cy={y + CELL_SIZE / 2}
+                      r="15"
+                      fill="none"
+                      stroke="var(--accent-green)"
+                      strokeOpacity="0.45"
+                      strokeWidth="1"
+                    />
+                  </g>
+                )}
+
                 {/* Drop target (invisible rect) */}
                 <rect
                   x={x + 2}
                   y={y + 2}
                   width={CELL_SIZE - 4}
                   height={CELL_SIZE - 4}
-                  fill={isHovered ? 'rgba(99, 102, 241, 0.08)' : 'transparent'}
-                  stroke={isHovered ? 'rgba(99, 102, 241, 0.3)' : 'transparent'}
+                  fill={isHovered ? 'rgba(0, 217, 146, 0.08)' : 'transparent'}
+                  stroke={isHovered ? 'rgba(0, 217, 146, 0.3)' : 'transparent'}
                   strokeWidth="1"
                   rx="4"
                   className="cursor-pointer"
@@ -176,7 +207,32 @@ export default function CircuitCanvas() {
 
                 {/* Gate rendering */}
                 {cell && (
-                  <g onClick={() => handleCellClick(q, m)} className="cursor-pointer">
+                  <g onClick={() => handleCellClick(q, m)} className={`cursor-pointer ${isPlaced ? 'circuit-gate-placed' : ''}`}>
+                    {isPlaced && (
+                      <>
+                        <circle
+                          cx={x + CELL_SIZE / 2}
+                          cy={y + CELL_SIZE / 2}
+                          r="21"
+                          fill="none"
+                          stroke={cell.color}
+                          strokeOpacity="0.55"
+                          strokeWidth="1"
+                          className="gate-impact-ring"
+                        />
+                        <rect
+                          x={x + 3}
+                          y={y + 3}
+                          width={CELL_SIZE - 6}
+                          height={CELL_SIZE - 6}
+                          rx="9"
+                          fill={`${cell.color}12`}
+                          stroke={cell.color}
+                          strokeOpacity="0.45"
+                          className="gate-impact-halo"
+                        />
+                      </>
+                    )}
                     <rect
                       x={x + 6}
                       y={y + 6}
@@ -186,7 +242,7 @@ export default function CircuitCanvas() {
                       fill={isSelected ? `${cell.color}33` : `${cell.color}1a`}
                       stroke={isSelected ? cell.color : `${cell.color}66`}
                       strokeWidth={isSelected ? 2 : 1}
-                      className="transition-all"
+                      className="gate-node transition-all"
                     />
                     <text
                       x={x + CELL_SIZE / 2}
