@@ -17,6 +17,7 @@ The app also accepts the public Supabase names used in many auth examples:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 ## Backend
@@ -51,6 +52,7 @@ ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 - Confirm `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set.
 - Confirm the Google provider redirect URL matches `/auth/callback`.
 - Confirm Email provider is enabled if using email/password sign in.
+- Confirm password reset redirect URLs include `/reset-password`.
 
 **Backend cannot connect to Supabase**
 - Confirm `SUPABASE_URL` is set.

@@ -12,6 +12,8 @@ const supabaseAnonKey =
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
+export const appUrl = import.meta.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
   supabaseAnonKey || 'placeholder-anon-key',

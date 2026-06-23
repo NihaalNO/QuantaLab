@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
-import { isSupabaseConfigured, supabase, trackUserActivity } from '../lib/supabase/client'
+import { appUrl, isSupabaseConfigured, supabase, trackUserActivity } from '../lib/supabase/client'
 
 interface AuthContextValue {
   user: User | null
@@ -9,6 +9,8 @@ interface AuthContextValue {
   isConfigured: boolean
   signInWithEmail: (email: string, password: string) => Promise<{ error?: string }>
   signUpWithEmail: (email: string, password: string, fullName?: string) => Promise<{ error?: string; needsEmailConfirmation?: boolean }>
+  sendPasswordResetEmail: (email: string) => Promise<{ error?: string; redirectTo?: string }>
+  updatePassword: (password: string) => Promise<{ error?: string }>
   signInWithGoogle: () => Promise<{ error?: string }>
   signOut: () => Promise<void>
 }
@@ -89,6 +91,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) return { error: error.message }
 
       return { needsEmailConfirmation: !data.session }
+    },
+    sendPasswordResetEmail: async (email: string) => {
+      if (!isSupabaseConfigured) {
+        return { error: 'Supabase is not configured. Add your Supabase URL and anon key to the frontend environment.' }
+      }
+
+      const redirectTo = `${appUrl}/reset-password`
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      })
+
+      return error ? { error: error.message, redirectTo } : { redirectTo }
+    },
+    updatePassword: async (password: string) => {
+      if (!isSupabaseConfigured) {
+        return { error: 'Supabase is not configured. Add your Supabase URL and anon key to the frontend environment.' }
+      }
+
+      const { error } = await supabase.auth.updateUser({
+        password,
+      })
+
+      return error ? { error: error.message } : {}
     },
     signInWithGoogle: async () => {
       if (!isSupabaseConfigured) {

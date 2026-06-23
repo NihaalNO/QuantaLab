@@ -19,6 +19,8 @@
 4. Enable Google and add your OAuth client ID and secret.
 5. Add redirect URLs:
    - `http://localhost:3000/auth/callback`
+   - `http://localhost:3000/forgot-password`
+   - `http://localhost:3000/reset-password`
    - your production callback URL
 6. Run `quantalab_auth_activity_schema.sql` in the Supabase SQL editor.
 7. In Authentication > Providers > Email, keep email/password authentication enabled.
